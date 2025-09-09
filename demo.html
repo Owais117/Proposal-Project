@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Special Proposal</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    .scene {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    h1, h2 {
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    .btn {
+      padding: 10px 25px;
+      margin: 10px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: 0.3s;
+    }
+    .btn-yes {
+      background: linear-gradient(45deg, red, deeppink);
+      color: #fff;
+    }
+    .btn-no {
+      background: linear-gradient(45deg, #444, #222);
+      color: #fff;
+    }
+    .slideshow img {
+      max-width: 300px;
+      max-height: 300px;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      display: none;
+    }
+    /* Falling hearts */
+    .heart {
+      position: fixed;
+      top: -10px;
+      font-size: 24px;
+      color: red;
+      animation: fall linear forwards;
+      z-index: 0;
+    }
+    @keyframes fall {
+      to {
+        transform: translateY(110vh);
+        opacity: 0;
+      }
+    }
+    /* Panda Modal */
+    #noModal, #giftModal {
+      display:none;
+      position:fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      background: rgba(0,0,0,0.7);
+      justify-content:center;
+      align-items:center;
+      z-index:999;
+    }
+    #noModal .content, #giftModal .content {
+      background:#fff;
+      color:#333;
+      padding:20px;
+      border-radius:16px;
+      text-align:center;
+      max-width:350px;
+    }
+    #noModal img {
+      width:100%;
+      border-radius:12px;
+    }
+    #noModal button, #giftModal button {
+      margin-top:15px;
+      padding:8px 20px;
+      border:none;
+      border-radius:20px;
+      background:#ff4b2b;
+      color:#fff;
+      cursor:pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Scene 1: Intro -->
+  <div class="scene" id="scene1">
+    <h1 id="typingText"></h1>
+    <button class="btn btn-yes" onclick="goToScene(2)">Next ➡️</button>
+  </div>
+
+  <!-- Scene 2: Slideshow -->
+  <div class="scene" id="scene2" style="display:none;">
+    <h2>Yaadein Tumhari 💕</h2>
+    <div class="slideshow">
+      <!-- 👉 Apni pics yahan lagao -->
+      <img src="https://via.placeholder.com/300x300.png?text=Pic+1" alt="Pic 1">
+      <img src="https://via.placeholder.com/300x300.png?text=Pic+2" alt="Pic 2">
+      <img src="https://via.placeholder.com/300x300.png?text=Pic+3" alt="Pic 3">
+    </div>
+    <button class="btn btn-yes" onclick="goToScene(3)">Next ➡️</button>
+  </div>
+
+  <!-- Scene 3: Proposal -->
+  <div class="scene" id="scene3" style="display:none;">
+    <h2>Kya tum meri life partner banogi? 💍</h2>
+    <div>
+      <button class="btn btn-yes" id="yesBtn">Yes 🌹</button>
+      <button class="btn btn-no" id="noBtn">No 💔</button>
+    </div>
+  </div>
+
+  <!-- Scene 4: Final -->
+  <div class="scene" id="scene4" style="display:none;">
+    <h1>Mujhe pata tha tum "YES" hi kahogi 😍❤️</h1>
+    <button class="btn btn-yes" id="giftBtn">Gift 🎁</button>
+  </div>
+
+  <!-- Panda Modal -->
+  <div id="noModal">
+    <div class="content">
+      <img src="https://media.tenor.com/7h2Hjv2b2c0AAAAM/panda-sad.gif" alt="Crying Panda"> 
+      <p style="margin-top:10px; font-size:1.1rem;">
+        Aray yaar 😢 tumne <b>No</b> dabaya... Panda bhi ro raha hai 🐼💔
+      </p>
+      <button onclick="closeModal()">Sorry Panda 😔</button>
+    </div>
+  </div>
+
+  <!-- Gift Modal -->
+  <div id="giftModal">
+    <div class="content">
+      <h2>💌 Meri Choti Si Chitthi</h2>
+      <p style="margin-top:10px; font-size:1rem; line-height:1.5;">
+        Tum meri zindagi ki sabse pyari wajah ho.  
+        Tumhari muskaan meri duniya roshan karti hai.  
+        Agar tum mere saath ho, mujhe aur kuch nahi chahiye... ❤️  
+      </p>
+      <button onclick="closeGift()">Close 💕</button>
+    </div>
+  </div>
+
+  <script>
+    // Page load
+    window.onload = () => {
+      document.getElementById('noModal').style.display = "none";
+      document.getElementById('giftModal').style.display = "none";
+      startHearts();
+    };
+
+    // Typing effect
+    const text = "Tum meri zindagi ki sabse khoobsurat wajah ho ❤️";
+    let i = 0;
+    function typing() {
+      if (i < text.length) {
+        document.getElementById("typingText").innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typing, 80);
+      }
+    }
+    typing();
+
+    // Scene navigation
+    function goToScene(n) {
+      document.querySelectorAll('.scene').forEach(s => s.style.display = 'none');
+      document.getElementById('scene' + n).style.display = 'flex';
+    }
+
+    // Slideshow
+    let slideIndex = 0;
+    const slides = document.querySelectorAll('.slideshow img');
+    function showSlides() {
+      slides.forEach(s => s.style.display = "none");
+      slideIndex++;
+      if (slideIndex > slides.length) slideIndex = 1;
+      slides[slideIndex-1].style.display = "block";
+      setTimeout(showSlides, 2000);
+    }
+    showSlides();
+
+    // Yes button
+    const yesBtn = document.getElementById('yesBtn');
+    yesBtn.addEventListener('click', () => {
+      goToScene(4);
+    });
+
+    // No button
+    const noBtn = document.getElementById('noBtn');
+    noBtn.addEventListener('click', () => {
+      document.getElementById('noModal').style.display = "flex";
+    });
+    function closeModal() {
+      document.getElementById('noModal').style.display = "none";
+    }
+
+    // Gift button
+    const giftBtn = document.getElementById('giftBtn');
+    giftBtn.addEventListener('click', () => {
+      document.getElementById('giftModal').style.display = "flex";
+    });
+    function closeGift() {
+      document.getElementById('giftModal').style.display = "none";
+    }
+
+    // Falling hearts
+    function startHearts() {
+      setInterval(() => {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.innerHTML = "❤️";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = (2 + Math.random() * 3) + "s";
+        heart.style.fontSize = (16 + Math.random()*20) + "px";
+        document.body.appendChild(heart);
+        setTimeout(() => { heart.remove(); }, 5000);
+      }, 500);
+    }
+  </script>
+</body>
+</html>
